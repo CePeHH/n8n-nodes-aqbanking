@@ -87,12 +87,43 @@ Retrieves the current balance of a specified bank account.
 }
 ```
 
+### Get Transactions
+
+Retrieves the transaction history for a specified bank account within a given date range.
+
+**Parameters:**
+- **Account Number**: The bank account number to query
+- **Start Date**: The start date for the transaction query (YYYY-MM-DD)
+- **End Date**: The end date for the transaction query (YYYY-MM-DD)
+
+**Output:**
+```json
+{
+  "transactions": [
+    {
+      "date": "2023-10-27",
+      "amount": -50.00,
+      "currency": "EUR",
+      "remoteName": "REWE",
+      "purpose": "Einkauf"
+    },
+    {
+      "date": "2023-10-26",
+      "amount": 1200.00,
+      "currency": "EUR",
+      "remoteName": "Arbeitgeber",
+      "purpose": "Gehalt"
+    }
+  ]
+}
+```
+
 ## Usage Example
 
 1. Add the AqBanking node to your workflow
 2. Configure your AqBanking credentials
-3. Set the operation to "Get Balance"
-4. Enter the account number you want to query
+3. Select the desired operation ("Get Balance" or "Get Transactions")
+4. Enter the required parameters for the selected operation
 5. Execute the workflow
 
 The node will return the current balance and currency for the specified account.

@@ -1,8 +1,20 @@
 {
   "name": "n8n-nodes-aqbanking",
-  "version": "0.1.0",
-  "description": "n8n node to interact with German banks using AqBanking",
+  "version": "0.1.1",
+  "description": "n8n community node to interact with German banks using AqBanking (FinTS/HBCI) protocol for account balance queries and transaction retrieval",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "aqbanking",
+    "hbci",
+    "fints",
+    "german-banks",
+    "banking",
+    "automation",
+    "fintech"
+  ],
   "license": "MIT",
+  "homepage": "https://github.com/CePeHH/n8n-nodes-aqbanking#readme",
   "author": {
     "name": "CePEHH",
     "email": "cepehh@gmail.com"
@@ -11,16 +23,25 @@
     "type": "git",
     "url": "git+https://github.com/CePeHH/n8n-nodes-aqbanking.git"
   },
+  "bugs": {
+    "url": "https://github.com/CePeHH/n8n-nodes-aqbanking/issues"
+  },
   "main": "dist/nodes/AqBanking/AqBanking.node.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run lint:fix",
     "dev": "tsc --watch",
+    "watch": "tsc --watch",
+    "start": "n8n start",
     "format": "prettier --write \"**/*.ts\"",
-    "lint": "eslint . --ext .ts --fix",
-    "prepublishOnly": "npm run build"
+    "lint": "eslint nodes credentials --ext .ts",
+    "lint:fix": "eslint nodes credentials --ext .ts --fix",
+    "lintfix": "eslint nodes credentials --ext .ts --fix",
+    "prepublishOnly": "npm run build && npm run lint",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
@@ -31,15 +52,21 @@
       "dist/nodes/AqBanking/AqBanking.node.js"
     ]
   },
-  "dependencies": {
-    "n8n-workflow": "*"
+  "engines": {
+    "node": ">=18.10",
+    "pnpm": ">=8.1"
   },
+  "packageManager": "pnpm@8.1.0",
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.50.0",
+    "@types/node": "^18.16.16",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
-    "prettier": "^2.8.0",
-    "typescript": "~4.8.4"
+    "n8n-workflow": "^1.2.0",
+    "prettier": "^2.8.8",
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
   }
 }
