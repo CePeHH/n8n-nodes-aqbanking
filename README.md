@@ -6,6 +6,8 @@ An n8n community node to interact with German banks using AqBanking.
 
 ## Installation
 
+**Important Prerequisite**: This n8n node requires the `aqbanking-tools` command-line utility to be installed on the system where your n8n instance is running. Without it, the node will not function. Please refer to the "Prerequisites" section below for detailed installation instructions, especially for Docker environments.
+
 ### Community Nodes (Recommended)
 
 For users on n8n v0.187+, your instance owner can install this node from **Community Nodes**.
@@ -26,15 +28,39 @@ To get started install the package in your n8n root directory:
 npm install n8n-nodes-aqbanking
 ```
 
-For Docker-based deployments, add the following line before the font installation command in your n8n Dockerfile:
+For Docker-based deployments, you need to ensure `aqbanking-tools` is installed within your container. You can do this by creating a custom Dockerfile based on the official n8n image:
 
+**Dockerfile Example:**
 ```dockerfile
+# Use the official n8n image as a base
+FROM n8nio/n8n:latest
+
+# Switch to root user to install system packages
+USER root
+
+# Install AqBanking tools
+RUN apt-get update && apt-get install -y aqbanking-tools && rm -rf /var/lib/apt/lists/*
+
+# Install the community node
 RUN cd /usr/local/lib/node_modules/n8n && npm install n8n-nodes-aqbanking
+
+# Switch back to the node user
+USER node
+```
+
+Build and run this custom image instead of the standard one.
+
+### Manual installation
+
+To get started install the package in your n8n root directory:
+
+```bash
+npm install n8n-nodes-aqbanking
 ```
 
 ## Prerequisites
 
-This node requires AqBanking to be installed on your system:
+This node requires AqBanking to be installed on your system. If you are not using Docker, you can install it with one of the following commands:
 
 ### Ubuntu/Debian
 ```bash
