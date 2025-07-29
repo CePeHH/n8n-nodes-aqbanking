@@ -6,7 +6,7 @@ An n8n community node to interact with German banks using AqBanking.
 
 ## Installation
 
-**Wichtiger Hinweis**: Diese n8n-Node benötigt das Kommandozeilen-Tool `aqbanking-tools` auf dem System, auf dem Ihre n8n-Instanz läuft. Ohne dieses Tool kann die Node nicht funktionieren, da sie es zur Kommunikation mit den Banken verwendet. Aktuell ist mir keine Methode bekannt, die Node ohne die Installation von `aqbanking-tools` zu betreiben. Die Einrichtung kann je nach Umgebung (z.B. Docker) länger dauern. Detaillierte Installationsanweisungen finden Sie im Abschnitt "Prerequisites".
+**Important Note**: This n8n node requires the `aqbanking-tools` command-line utility to be installed on the system where your n8n instance is running. Without this tool, the node cannot function as it relies on it for communication with banks. Currently, there is no known method to operate the node without `aqbanking-tools`. Setting it up might take longer, especially in Docker environments. Detailed installation instructions can be found in the "Prerequisites" section.
 
 ### Community Nodes (Recommended)
 
