@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-aqbanking",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "n8n community node to interact with German banks using FinTS/HBCI protocol for account balance queries and transaction retrieval - Development/Testing version without aqbanking-cli dependency",
   "keywords": [
     "n8n-community-node-package",
