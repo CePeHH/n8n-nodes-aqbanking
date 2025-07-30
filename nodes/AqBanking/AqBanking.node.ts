@@ -7,6 +7,7 @@ import {
 	NodeConnectionType,
 } from 'n8n-workflow';
 import { spawn } from 'child_process';
+import { NativeFinTSClient, executePythonFinTS, executeDockerFinTS } from './FinTSClient';
 
 export class AqBanking implements INodeType {
 	description: INodeTypeDescription = {
@@ -376,6 +377,50 @@ async function getBalance(executeFunctions: IExecuteFunctions, itemIndex: number
 		throw new NodeOperationError(executeFunctions.getNode(), 'Account number is required for balance query');
 	}
 
+	const implementation = credentials.fintsImplementation || 'system';
+
+	switch (implementation) {
+		case 'native':
+			return getBalanceNative(executeFunctions, itemIndex, credentials, accountNumber, additionalOptions);
+		
+		case 'python':
+			return executePythonFinTS(executeFunctions, 'getBalance', {
+				credentials,
+				accountNumber,
+				bankCode,
+				...additionalOptions
+			});
+		
+		case 'docker':
+			return executeDockerFinTS(executeFunctions, 'getBalance', {
+				credentials,
+				accountNumber,
+				bankCode,
+				...additionalOptions
+			});
+		
+		case 'system':
+		default:
+			return getBalanceSystem(executeFunctions, itemIndex, credentials, accountNumber, bankCode, additionalOptions);
+	}
+}
+
+async function getBalanceNative(executeFunctions: IExecuteFunctions, itemIndex: number, credentials: any, accountNumber: string, additionalOptions: any): Promise<any> {
+	const client = new NativeFinTSClient(credentials);
+	
+	try {
+		const result = await client.getBalance(accountNumber);
+		
+		return {
+			...result,
+			...(additionalOptions.includeRawOutput && { rawOutput: 'Native FinTS implementation - no raw output available' }),
+		};
+	} finally {
+		await client.close();
+	}
+}
+
+async function getBalanceSystem(executeFunctions: IExecuteFunctions, itemIndex: number, credentials: any, accountNumber: string, bankCode: string, additionalOptions: any): Promise<any> {
 	const args = buildBaseArgs(credentials);
 	args.push('request', '--balance');
 	
@@ -406,6 +451,65 @@ async function getTransactions(executeFunctions: IExecuteFunctions, itemIndex: n
 		throw new NodeOperationError(executeFunctions.getNode(), 'Account number is required for transaction query');
 	}
 
+	const implementation = credentials.fintsImplementation || 'system';
+	const { startDate, endDate } = getDateRange(executeFunctions, dateRange, itemIndex);
+
+	switch (implementation) {
+		case 'native':
+			return getTransactionsNative(executeFunctions, itemIndex, credentials, accountNumber, startDate, endDate, additionalOptions);
+		
+		case 'python':
+			return executePythonFinTS(executeFunctions, 'getTransactions', {
+				credentials,
+				accountNumber,
+				bankCode,
+				startDate,
+				endDate,
+				...additionalOptions
+			});
+		
+		case 'docker':
+			return executeDockerFinTS(executeFunctions, 'getTransactions', {
+				credentials,
+				accountNumber,
+				bankCode,
+				startDate,
+				endDate,
+				...additionalOptions
+			});
+		
+		case 'system':
+		default:
+			return getTransactionsSystem(executeFunctions, itemIndex, credentials, accountNumber, bankCode, dateRange, additionalOptions);
+	}
+}
+
+async function getTransactionsNative(executeFunctions: IExecuteFunctions, itemIndex: number, credentials: any, accountNumber: string, startDate: string | undefined, endDate: string | undefined, additionalOptions: any): Promise<any> {
+	const client = new NativeFinTSClient(credentials);
+	
+	try {
+		const startDateObj = startDate ? new Date(startDate.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')) : undefined;
+		const endDateObj = endDate ? new Date(endDate.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')) : undefined;
+		
+		const result = await client.getTransactions(accountNumber, startDateObj, endDateObj);
+		
+		// Apply max results limit
+		if (additionalOptions.maxResults && additionalOptions.maxResults > 0) {
+			result.transactions = result.transactions.slice(0, additionalOptions.maxResults);
+			result.count = result.transactions.length;
+		}
+
+		return {
+			...result,
+			dateRange: { startDate, endDate },
+			...(additionalOptions.includeRawOutput && { rawOutput: 'Native FinTS implementation - no raw output available' }),
+		};
+	} finally {
+		await client.close();
+	}
+}
+
+async function getTransactionsSystem(executeFunctions: IExecuteFunctions, itemIndex: number, credentials: any, accountNumber: string, bankCode: string, dateRange: string, additionalOptions: any): Promise<any> {
 	const args = buildBaseArgs(credentials);
 	args.push('request', '--transactions');
 	
@@ -539,6 +643,11 @@ function buildBaseArgs(credentials: any): string[] {
 		args.push('--noninteractive');
 	}
 	
+	// Add server URL if provided
+	if (credentials.serverUrl) {
+		args.push('--url', credentials.serverUrl);
+	}
+	
 	return args;
 }
 
@@ -547,6 +656,11 @@ function buildHbciArgs(credentials: any): string[] {
 	
 	if (credentials.userId) {
 		args.push('-u', credentials.userId);
+	}
+	
+	// Add server URL if provided
+	if (credentials.serverUrl) {
+		args.push('--url', credentials.serverUrl);
 	}
 	
 	return args;

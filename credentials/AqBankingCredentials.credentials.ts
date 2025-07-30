@@ -12,6 +12,31 @@ export class AqBankingCredentials implements ICredentialType {
 	
 	properties: INodeProperties[] = [
 		{
+			displayName: 'FinTS Implementation',
+			name: 'fintsImplementation',
+			type: 'options',
+			options: [
+				{
+					name: 'Native JavaScript (Recommended)',
+					value: 'native',
+				},
+				{
+					name: 'Python fints',
+					value: 'python',
+				},
+				{
+					name: 'Docker AqBanking',
+					value: 'docker',
+				},
+				{
+					name: 'System AqBanking (Legacy)',
+					value: 'system',
+				},
+			],
+			default: 'native',
+			description: 'Choose the FinTS implementation method. Native JavaScript works without external dependencies.',
+		},
+		{
 			displayName: 'Bank Code (BLZ)',
 			name: 'bankCode',
 			type: 'string',
@@ -115,6 +140,31 @@ export class AqBankingCredentials implements ICredentialType {
 			type: 'boolean',
 			default: false,
 			description: 'Whether to enable detailed logging for troubleshooting. WARNING: This may log sensitive information.',
+		},
+		{
+			displayName: 'Python Path',
+			name: 'pythonPath',
+			type: 'string',
+			default: 'python',
+			displayOptions: {
+				show: {
+					fintsImplementation: ['python'],
+				},
+			},
+			placeholder: 'python or /usr/bin/python3',
+			description: 'Path to Python executable. Requires python-fints package installed.',
+		},
+		{
+			displayName: 'Docker Image',
+			name: 'dockerImage',
+			type: 'string',
+			default: 'ghcr.io/larsux/aqbanking-docker',
+			displayOptions: {
+				show: {
+					fintsImplementation: ['docker'],
+				},
+			},
+			description: 'Docker image for AqBanking. Default is the community-maintained image.',
 		},
 	];
 

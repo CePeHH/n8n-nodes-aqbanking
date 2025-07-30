@@ -4,9 +4,15 @@ An n8n community node to interact with German banks using AqBanking.
 
 ![n8n.io - Workflow Automation](https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png)
 
+## ⚠️ Development Version Notice
+
+**This version has been implemented without the aqbanking-cli tool dependency and is intended for testing purposes only.** This is a development version primarily designed for developers working on German banking integrations and should not be used in production environments. It is specifically designed for German banking institutions only.
+
+**Please do not install this version for production use. It is meant for testing and development purposes only.**
+
 ## Installation
 
-**Important Note**: This n8n node requires the `aqbanking-tools` command-line utility to be installed on the system where your n8n instance is running. Without this tool, the node cannot function as it relies on it for communication with banks. Currently, there is no known method to operate the node without `aqbanking-tools`. Setting it up might take longer, especially in Docker environments. Detailed installation instructions can be found in the "Prerequisites" section.
+**Important Note**: This development version has been implemented without the `aqbanking-tools` dependency using direct FinTS/HBCI protocol implementation. This version is for testing and development purposes only and should not be used in production environments.
 
 ### Community Nodes (Recommended)
 
@@ -60,41 +66,24 @@ npm install n8n-nodes-aqbanking
 
 ## Prerequisites
 
-This node requires AqBanking to be installed on your system. If you are not using Docker, you can install it with one of the following commands:
+**Development Version**: This version does not require AqBanking to be installed as it uses a direct FinTS/HBCI implementation. However, it is intended for testing and development purposes only.
 
-### Ubuntu/Debian
-```bash
-sudo apt-get install aqbanking-tools
-```
-
-### CentOS/RHEL/Fedora
-```bash
-sudo yum install aqbanking-tools
-# or
-sudo dnf install aqbanking-tools
-```
-
-### macOS
-```bash
-brew install aqbanking
-```
-
-You also need to set up your bank connection using AqBanking's setup tools before using this node.
+**Important**: This version is designed specifically for German banking institutions and should only be used by developers working on banking integrations for testing purposes.
 
 ## Configuration
 
-### Setting up AqBanking
+### Development Version Setup
 
-1. **Add your bank**: Use `aqhbci-tool4` to add your bank and user configuration
-2. **Get user ID**: Run `aqbanking-cli listusers` to get your numeric user ID
-3. **Test connection**: Verify your setup works with `aqbanking-cli request --balance`
+This version uses direct FinTS/HBCI protocol implementation and does not require AqBanking setup.
 
 ### Credentials
 
 The node requires the following credentials:
 
-- **AqBanking User ID**: The numeric user ID from `aqbanking-cli listusers`
+- **Bank Code (BLZ)**: Your bank's routing number
+- **User ID**: Your online banking user ID
 - **PIN**: Your online banking PIN
+- **FinTS URL**: Your bank's FinTS server URL (optional, will be auto-detected if not provided)
 
 ## Operations
 
@@ -226,7 +215,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Disclaimer
 
-This software is provided for educational and development purposes. Always verify transactions and balances through your bank's official channels. The authors are not responsible for any financial losses or damages.
+**This development version is provided for testing and development purposes only.** It should not be installed or used in production environments. This version is specifically designed for developers working on German banking integrations and is limited to German banking institutions only.
+
+Always verify transactions and balances through your bank's official channels. The authors are not responsible for any financial losses or damages that may occur from using this development version.
 
 ---
 
