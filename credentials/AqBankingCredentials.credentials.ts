@@ -1,7 +1,6 @@
 import {
 	ICredentialType,
 	INodeProperties,
-	ICredentialTestRequest,
 } from 'n8n-workflow';
 
 export class AqBankingCredentials implements ICredentialType {
@@ -168,11 +167,6 @@ export class AqBankingCredentials implements ICredentialType {
 		},
 	];
 
-	// No real test endpoint available - testing will be done in the node
-	test: ICredentialTestRequest = {
-		request: {
-			method: 'GET',
-			url: '/test',
-		},
-	};
+	// Test will be handled by the node implementation
+	// No credential test endpoint needed since FinTS requires complex authentication
 }
