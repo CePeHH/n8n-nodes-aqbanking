@@ -1,12 +1,4 @@
-// Import fints with proper typing - it may not have FinTS export directly
-let FinTS: any;
-try {
-	FinTS = require('fints');
-} catch (error) {
-	// Gracefully handle missing fints dependency
-	FinTS = null;
-}
-
+import FinTS from 'fints';
 import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export class NativeFinTSClient {
@@ -22,14 +14,8 @@ export class NativeFinTSClient {
 			return;
 		}
 
-		if (!FinTS) {
-			throw new Error('FinTS library not available. Please install the fints package: npm install fints');
-		}
-
 		try {
-			// Initialize FinTS client - check different possible export patterns
-			const FinTSClient = FinTS.default || FinTS.FinTSClient || FinTS;
-			
+			const FinTSClient = (FinTS as any).default || (FinTS as any).FinTSClient || FinTS;
 			this.client = new FinTSClient(
 				this.credentials.bankCode,
 				this.credentials.userId,

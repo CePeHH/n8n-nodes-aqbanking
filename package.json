@@ -62,7 +62,6 @@
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.56.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
-    "fints": "^0.5.0",
     "n8n-workflow": "^1.2.0",
     "prettier": "^2.8.8",
     "typescript": "^4.8.4"
@@ -70,7 +69,7 @@
   "peerDependencies": {
     "n8n-workflow": "*"
   },
-  "optionalDependencies": {
+  "dependencies": {
     "fints": "^0.5.0"
   }
 }
