@@ -1,4 +1,4 @@
-import FinTS from 'fints';
+import * as FinTS from 'fints';
 import { IExecuteFunctions, NodeOperationError } from 'n8n-workflow';
 
 export class NativeFinTSClient {
